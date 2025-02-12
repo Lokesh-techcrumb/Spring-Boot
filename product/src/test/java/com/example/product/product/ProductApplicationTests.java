@@ -10,15 +10,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.product.product.entities.Product;
 import com.example.product.product.repos.ProductRepository;
 
+import java.util.List;
+
 @SpringBootTest
 class ProductApplicationTests {
 
 	@Autowired
 	ProductRepository repository;
-
-	@Test
-	void contextLoads() {
-	}
 
 	@Test
 	public void testCreate(){
@@ -55,5 +53,32 @@ class ProductApplicationTests {
 		if(repository.existsById(1)){
 			repository.deleteById(1);
 		}
+	}
+
+	@Test
+		public void testFindByName(){
+		List<Product> products = repository.findByName("Sausages");
+		products.forEach(p->System.out.println(p.getPrice()));
+	}
+
+	@Test
+	public void testFindByNameOrPrice(){
+		List<Product> products = repository.findByNameOrPrice("Sausages", 936d);
+		products.forEach(p->System.out.println(p.getPrice()));
+	}
+
+	@Test
+	public void testFindByNameOrPriceGreaterThan(){
+		List<Product> products = repository.findByNameOrPriceGreaterThan("Sausages", 600d);
+		products.forEach(p->System.out.println(p.getId() + " " + p.getPrice()));
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void testFindByDescContains(){
+		List<Product> products = repository.findByDescContainsIgnoreCase("Apple");
+		products.forEach(p->System.out.println(p.getName() + " " + p.getPrice()));
 	}
 }

@@ -16,7 +16,6 @@ class EmployeeApplicationTests {
 	@Test
 	public void testCreateEmployee(){
 		Employee emp = new Employee();
-		emp.setId(1);
 		emp.setName("lokesh");
 		repo.save(emp);
 	}
