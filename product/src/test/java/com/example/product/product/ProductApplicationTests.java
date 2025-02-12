@@ -78,7 +78,7 @@ class ProductApplicationTests {
 	 */
 	@Test
 	public void testFindByDescContains(){
-		List<Product> products = repository.findByDescContainsIgnoreCase("Apple");
+		List<Product> products = repository.findByDescriptionContains("Apple");
 		products.forEach(p->System.out.println(p.getName() + " " + p.getPrice()));
 	}
 }
