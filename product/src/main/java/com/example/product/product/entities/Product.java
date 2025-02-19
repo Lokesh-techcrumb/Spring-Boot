@@ -12,8 +12,7 @@ public class Product {
     @Id
     private int id;
     private String name;
-    @Column(name="description")
-    private String Desc;
+    private String description;
     private double price;
 
     public int getId() {
@@ -33,11 +32,11 @@ public class Product {
     }
 
     public String getDesc() {
-        return Desc;
+        return description;
     }
 
-    public void setDesc(String desc) {
-        Desc = desc;
+    public void setDesc(String description) {
+        description = description;
     }
 
     public double getPrice() {

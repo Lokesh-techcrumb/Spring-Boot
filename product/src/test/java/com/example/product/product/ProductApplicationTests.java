@@ -9,12 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.product.product.entities.Product;
 import com.example.product.product.repos.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
 @SpringBootTest
-class ProductApplicationTests {
-
+public class ProductApplicationTests {
 	@Autowired
 	ProductRepository repository;
 
@@ -73,12 +76,38 @@ class ProductApplicationTests {
 		products.forEach(p->System.out.println(p.getId() + " " + p.getPrice()));
 	}
 
-	/**
-	 *
-	 */
 	@Test
-	public void testFindByDescContains(){
+	public void testFindByDescriptionContains(){
 		List<Product> products = repository.findByDescriptionContains("Apple");
 		products.forEach(p->System.out.println(p.getName() + " " + p.getPrice()));
+	}
+
+	@Test
+	public void testFindByPriceBetween(){
+		List<Product> products = repository.findByPriceBetween(500d, 1600d);
+		products.forEach(p->System.out.println(p.getName() + " " + p.getPrice()));
+	}
+
+	@Test
+	public void testFindByDescriptionLike(){
+		List<Product> products = repository.findByDescriptionLike("%Apple%");
+		products.forEach(p->System.out.println(p.getName() + " " + p.getPrice()));
+	}
+
+	@Test
+	public void testFindAllPaging(){
+		Pageable pageable = PageRequest.of(0, 5);
+		Page<Product> results = repository.findAll(pageable);
+		results.forEach(p->System.out.println(p.getName()));
+	}
+
+//	@Test
+//	public void testFindAllSorting(){
+//		repository.findAll(new Sort("name")).forEach(p->System.out.println(p.getName()));
+//	}
+
+	@Test
+	public void testFindAllSorting(){
+		repository.findAll(new Sort(Sort.Direction.DESC,"name")).forEach(p->System.out.println(p.getName()));
 	}
 }
