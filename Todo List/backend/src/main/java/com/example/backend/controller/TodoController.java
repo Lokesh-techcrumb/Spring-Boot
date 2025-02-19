@@ -7,10 +7,9 @@ import com.example.backend.repos.TodoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -36,15 +35,18 @@ class TodoController {
     }
 
     @GetMapping
-    public Page<Todo> getTodos(@RequestParam(required = false) String status,
+        public Page<Todo> getTodos(@RequestParam(required = false) String status,
                                @RequestParam(required = false) String tag,
                                @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+                               @RequestParam(defaultValue = "6") int size,
+                               @RequestParam(defaultValue = "createdAt") String sortBy,
+                               @RequestParam(defaultValue = "desc") String order) {
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         if (status != null && tag != null) {
             return (Page<Todo>) todoRepository.findByStatusAndTags_Name(status, tag, pageable);
         }
-        return (Page<Todo>)  todoRepository.findAll(pageable);
+        return todoRepository.findAll(pageable);
     }
 
     @PutMapping("/{id}")
@@ -57,7 +59,6 @@ class TodoController {
                 tag = tagRepository.save(new Tag(todoDetails.getTag().getName()));
             }
             todo.setTag(tag);
-
             return todoRepository.save(todo);
         }).orElseThrow(() -> new RuntimeException("Todo not found"));
     }
