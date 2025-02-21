@@ -35,19 +35,34 @@ class TodoController {
     }
 
     @GetMapping
-        public Page<Todo> getTodos(@RequestParam(required = false) String status,
-                               @RequestParam(required = false) String tag,
-                               @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "6") int size,
-                               @RequestParam(defaultValue = "createdAt") String sortBy,
-                               @RequestParam(defaultValue = "desc") String order) {
+    public Page<Todo> getTodos(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String tag,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String order) {
+
         Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        if (status != null && tag != null) {
-            return (Page<Todo>) todoRepository.findByStatusAndTags_Name(status, tag, pageable);
+
+        if (status != null || tag != null) {
+            return todoRepository.findByStatusAndTags_Name(status, tag, pageable);
         }
         return todoRepository.findAll(pageable);
     }
+
+    @GetMapping("/search")
+    public Page<Todo> searchTodos(@RequestParam String query,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "5") int size,
+                                  @RequestParam(defaultValue = "createdAt") String sortBy,
+                                  @RequestParam(defaultValue = "desc") String order) {
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return todoRepository.searchTodos(query, pageable);
+    }
+
 
     @PutMapping("/{id}")
     public Todo updateTodo(@PathVariable Long id, @RequestBody Todo todoDetails) {
