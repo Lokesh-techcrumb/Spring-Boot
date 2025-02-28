@@ -17,13 +17,11 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.formLogin(Customizer.withDefaults());
-        http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers(HttpMethod.GET, "/coupon/{code:^[A-Z]*$}", "/", "/showGetCoupon")
-                    .hasAnyRole("User", "Admin").requestMatchers(HttpMethod.GET, "/showCreateCoupon", "createCoupon", "createResponse").hasRole("Admin")
-                    .requestMatchers(HttpMethod.POST, "/coupon", "/saveCoupon").hasRole("Admin").requestMatchers(HttpMethod.POST, "/getCoupon").hasRole("Admin");
-        });
+        http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, "/coupon/{code:^[A-Z]*$}", "/", "/showGetCoupon")
+                .hasAnyRole("User", "Admin").requestMatchers(HttpMethod.GET, "/showCreateCoupon", "createCoupon", "createResponse").hasRole("Admin")
+                .requestMatchers(HttpMethod.POST, "/coupon", "/saveCoupon").hasRole("Admin").requestMatchers(HttpMethod.POST, "/getCoupon").hasRole("Admin"));
         return http.build();
     }
 }

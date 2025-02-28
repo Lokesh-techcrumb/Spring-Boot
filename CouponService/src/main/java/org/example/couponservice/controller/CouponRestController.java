@@ -12,13 +12,13 @@ public class CouponRestController {
     @Autowired
     CouponRepository couponRepository;
 
-    @PostMapping
-    public Coupon add(@RequestBody Coupon coupon) {
-        return couponRepository.save(coupon);
-    }
-
-    @GetMapping("/{code}")
-    public Coupon getCoupon(@PathVariable String code) {
-        return couponRepository.findByCode(code);
-    }
+//    @PostMapping
+//    public Coupon add(@RequestBody Coupon coupon) {
+//        return couponRepository.save(coupon);
+//    }
+//
+//    @GetMapping("/{code}")
+//    public Coupon getCoupon(@PathVariable String code) {
+//        return couponRepository.findByCode(code);
+//    }
 }
